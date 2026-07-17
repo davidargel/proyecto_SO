@@ -3,51 +3,23 @@
 <head>
     <meta charset="UTF-8">
     <title>Wiki de Sistemas Operativos</title>
+    <link rel="stylesheet" href="style.css">
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <style>
-        body { font-family: sans-serif; max-width: 800px; margin: 40px auto; padding: 20px; }
-        .card { border: 1px solid #ddd; padding: 20px; border-radius: 8px; margin-bottom: 20px; }
-    </style>
 </head>
 <body>
 
     <h1>Wiki de Sistemas Operativos</h1>
+
+    <div class="form-container">
+        <h3>Agregar nuevo término</h3>
+        <input type="text" id="titulo" placeholder="Título">
+        <input type="text" id="url" placeholder="URL de la imagen">
+        <textarea id="definicion" placeholder="Definición"></textarea>
+        <button onclick="guardarTermino()">Guardar en la Wiki</button>
+    </div>
+
     <div id="contenedor">Cargando...</div>
 
-    <script>
-        const SUPABASE_URL = "https://ykxqciysbwqlzjlcrklj.supabase.co";
-        const SUPABASE_KEY = "sb_publishable_8pdzj2OOaIOGHVmOuIdQnA_75eP4BgX";
-
-        const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
-
-        async function cargarWiki() {
-            console.log("Iniciando consulta...");
-            const { data, error } = await supabaseClient.from('terminos').select('*');
-            
-            if (error) {
-                console.error("Error de Supabase:", error);
-                document.getElementById('contenedor').innerHTML = "Error: " + error.message;
-                return;
-            }
-
-            console.log("Datos recibidos:", data); // Consola
-
-            if (!data || data.length === 0) {
-                document.getElementById('contenedor').innerHTML = "La tabla está conectada, pero no tiene términos guardados.";
-                return;
-            }
-
-            //Render
-            document.getElementById('contenedor').innerHTML = data.map(item => `
-                <div class="card">
-                    <h2>${item.titulo || 'Sin título'}</h2>
-                    <img src="${item.imagen_url}" width="200" alt="${item.titulo}">
-                    <p>${item.definicion || 'Sin definición'}</p>
-                </div>
-            `).join('');
-        }
-
-        cargarWiki();
-    </script>
+    <script src="script.js"></script>
 </body>
 </html>
