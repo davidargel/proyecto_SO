@@ -1,0 +1,76 @@
+/* style.css */
+body { 
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+    background-color: #f4f7f6; 
+    margin: 0; 
+    padding: 40px 20px; 
+}
+
+h1 { color: #2c3e50; text-align: center; margin-bottom: 40px; }
+
+#contenedor { 
+    display: grid; 
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); 
+    gap: 25px; 
+    max-width: 1200px; 
+    margin: 0 auto; 
+}
+
+.card { 
+    background: white; 
+    padding: 20px; 
+    border-radius: 15px; 
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1); 
+    transition: transform 0.3s ease, box-shadow 0.3s ease; 
+    display: flex;
+    flex-direction: column;
+}
+
+.card:hover { 
+    transform: translateY(-10px); 
+    box-shadow: 0 10px 25px rgba(0,0,0,0.2); 
+}
+
+.card h2 { color: #3498db; margin-top: 0; }
+
+.card img { 
+    width: 100%; 
+    height: 200px; 
+    object-fit: cover; 
+    border-radius: 10px; 
+    margin-bottom: 15px; 
+}
+
+.card p { color: #555; font-size: 0.95rem; }
+
+.form-container { 
+    background: #fff; 
+    max-width: 500px; 
+    margin: 0 auto 40px; 
+    padding: 25px; 
+    border-radius: 15px; 
+    box-shadow: 0 5px 20px rgba(0,0,0,0.05); 
+}
+
+input, textarea { 
+    width: 100%; 
+    padding: 12px; 
+    margin-bottom: 15px; 
+    border: 1px solid #ddd; 
+    border-radius: 8px; 
+    box-sizing: border-box; 
+}
+
+button { 
+    width: 100%; 
+    padding: 12px; 
+    background-color: #3498db; 
+    color: white; 
+    border: none; 
+    border-radius: 8px; 
+    font-weight: bold; 
+    cursor: pointer; 
+    transition: background 0.3s; 
+}
+
+button:hover { background-color: #2980b9; }
