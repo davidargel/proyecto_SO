@@ -11,10 +11,8 @@
 
     <h1>Wiki de Sistemas Operativos</h1>
 
-    <!-- ... debajo de tu <h1> ... -->
-
     <div class="main-layout">
-        <!-- Barra lateral de filtros -->
+
         <aside class="sidebar">
             <h3>Categorías</h3>
             <button onclick="filtrarPorCategoria('Todos')">Todos</button>
@@ -23,16 +21,15 @@
             <button onclick="filtrarPorCategoria('Procesos')">Procesos</button>
         </aside>
 
-        <!-- Contenido principal -->
+        
         <main class="content">
             <div class="search-container" style="text-align: center; margin-bottom: 20px;">
                 <input type="text" id="buscador" placeholder="Buscar término..." onkeyup="filtrarTerminos()" style="width: 100%; max-width: 400px;">
             </div>
 
-            <!-- Botón flotante -->
+            
             <button class="fab" onclick="abrirModal()">+</button>
 
-            <!-- Modal (Formulario oculto) -->
             <div id="modalFormulario" class="modal" style="display: none;">
                 <div class="modal-content">
                     <span class="close" onclick="cerrarModal()">&times;</span>
