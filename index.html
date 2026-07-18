@@ -5,21 +5,54 @@
     <title>Wiki de Sistemas Operativos</title>
     <link rel="stylesheet" href="style.css">
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap" rel="stylesheet">
 </head>
 <body>
 
     <h1>Wiki de Sistemas Operativos</h1>
 
-    <div class="form-container">
-        <h3>Agregar nuevo término</h3>
-        <input type="text" id="titulo" placeholder="Título">
-        <input type="text" id="url" placeholder="URL de la imagen">
-        <textarea id="definicion" placeholder="Definición"></textarea>
-        <button onclick="guardarTermino()">Guardar en la Wiki</button>
+    <!-- ... debajo de tu <h1> ... -->
+
+    <div class="main-layout">
+        <!-- Barra lateral de filtros -->
+        <aside class="sidebar">
+            <h3>Categorías</h3>
+            <button onclick="filtrarPorCategoria('Todos')">Todos</button>
+            <button onclick="filtrarPorCategoria('General')">General</button>
+            <button onclick="filtrarPorCategoria('Hardware')">Hardware</button>
+            <button onclick="filtrarPorCategoria('Procesos')">Procesos</button>
+        </aside>
+
+        <!-- Contenido principal -->
+        <main class="content">
+            <div class="search-container" style="text-align: center; margin-bottom: 20px;">
+                <input type="text" id="buscador" placeholder="Buscar término..." onkeyup="filtrarTerminos()" style="width: 100%; max-width: 400px;">
+            </div>
+
+            <!-- Botón flotante -->
+            <button class="fab" onclick="abrirModal()">+</button>
+
+            <!-- Modal (Formulario oculto) -->
+            <div id="modalFormulario" class="modal" style="display: none;">
+                <div class="modal-content">
+                    <span class="close" onclick="cerrarModal()">&times;</span>
+                    <h3>Agregar nuevo término</h3>
+                    <input type="text" id="titulo" placeholder="Título">
+                    <input type="text" id="categoria" placeholder="Categoría">
+                    <textarea id="definicion" placeholder="Definición"></textarea>
+                    <input type="text" id="url" placeholder="URL de la imagen">
+                    <button onclick="guardarTermino()">Guardar</button>
+                </div>
+            </div>
+
+            <div id="contenedor">Cargando...</div>
+        </main>
     </div>
 
-    <div id="contenedor">Cargando...</div>
-
     <script src="script.js"></script>
+
+    <div align="center">
+        <h5>Copyright © 2026 Brian David Argueta Elel</h5>
+    </div>
 </body>
 </html>
