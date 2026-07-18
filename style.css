@@ -1,4 +1,4 @@
-/* Hoja de estilo de la pagina */
+/* style.css */
 body { 
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
     background-color: #f4f7f6; 
@@ -74,3 +74,79 @@ button {
 }
 
 button:hover { background-color: #2980b9; }
+
+.btn-toggle {
+    background: none; 
+    border: none; 
+    color: #3498db; 
+    cursor: pointer; 
+    font-weight: bold; 
+    padding: 0;
+    display: inline;
+}
+
+.main-layout {
+    display: grid;
+    grid-template-columns: 200px 1fr;
+    gap: 30px;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.sidebar {
+    background: white;
+    padding: 20px;
+    border-radius: 15px;
+    height: fit-content;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+}
+
+.sidebar button {
+    display: block;
+    width: 100%;
+    margin-bottom: 10px;
+    background: #f4f4f4;
+    color: #333;
+    border: 1px solid #ddd;
+}
+
+.sidebar button:hover { background: #3498db; color: white; }
+
+@media (max-width: 768px) {
+    .main-layout { grid-template-columns: 1fr; }
+}
+
+/* Botón flotante */
+.fab {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    background: #3498db;
+    color: white;
+    font-size: 30px;
+    border: none;
+    cursor: pointer;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+}
+
+/* Modal */
+.modal {
+    position: fixed;
+    top: 0; left: 0; width: 100%; height: 100%;
+    background: rgba(0,0,0,0.5);
+    display: flex; justify-content: center; align-items: center;
+}
+
+.modal-content {
+    background: white;
+    padding: 30px;
+    border-radius: 15px;
+    width: 90%;
+    max-width: 400px;
+    position: relative;
+}
+
+.close { position: absolute; top: 10px; right: 15px; cursor: pointer; font-size: 20px; }
