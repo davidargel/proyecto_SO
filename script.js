@@ -5,7 +5,7 @@ const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
 async function guardarTermino() {
     const titulo = document.getElementById('titulo').value;
-    const categoria = document.getElementById('categoria').value; // Nueva línea
+    const categoria = document.getElementById('categoria').value;
     const definicion = document.getElementById('definicion').value;
     const url = document.getElementById('url').value;
 
@@ -20,41 +20,36 @@ async function guardarTermino() {
             titulo: titulo, 
             definicion: definicion, 
             imagen_url: url,
-            categoria: categoria // Nueva línea
+            categoria: categoria 
         }]);
 
     if (error) alert("Error al guardar: " + error.message);
     else {
         alert("¡Guardado con categoría!");
-        // Limpiar formulario
         document.getElementById('titulo').value = '';
         document.getElementById('categoria').value = '';
         document.getElementById('definicion').value = '';
         document.getElementById('url').value = '';
-        cargarWiki(); // Refrescar lista
+        cargarWiki();
     }
     if (!error) {
         alert("¡Guardado!");
-        cerrarModal(); // Cerrar el modal al finalizar
-        // ... limpiar campos ...
+        cerrarModal();
         cargarWiki();
     }
 }
 
 function filtrarTerminos() {
-    // Obtenemos el texto del buscador y lo pasamos a minúsculas para comparar mejor
     const filtro = document.getElementById('buscador').value.toLowerCase();
     const tarjetas = document.getElementsByClassName('card');
 
-    // Recorremos todas las tarjetas (excluyendo el formulario)
-    // El formulario tiene clase 'form-container', así que no se verá afectado
     for (let i = 0; i < tarjetas.length; i++) {
         const titulo = tarjetas[i].getElementsByTagName('h2')[0].innerText.toLowerCase();
         
         if (titulo.includes(filtro)) {
-            tarjetas[i].style.display = ""; // Mostrar
+            tarjetas[i].style.display = ""; 
         } else {
-            tarjetas[i].style.display = "none"; // Ocultar
+            tarjetas[i].style.display = "none";
         }
     }
 }
@@ -68,7 +63,7 @@ async function cargarWiki() {
     }
 
     document.getElementById('contenedor').innerHTML = data.map((item, index) => {
-        const limite = 150; // Cantidad de caracteres a mostrar antes del "Leer más"
+        const limite = 150; 
         const esLargo = item.definicion.length > limite;
         const textoCortado = esLargo ? item.definicion.substring(0, limite) + "..." : item.definicion;
 
@@ -93,12 +88,10 @@ function cerrarModal() {
     document.getElementById('modalFormulario').style.display = 'none';
 }
 
-// Función para alternar entre texto corto y largo
 function toggleDefinicion(index, definicionBase64) {
     const pElement = document.getElementById(`def-${index}`);
     const definicionCompleta = decodeURIComponent(escape(atob(definicionBase64)));
     
-    // Cambiamos el botón a "Leer menos" y mantenemos el mismo estilo
     pElement.innerHTML = definicionCompleta + ` <button onclick="cargarWiki()" style="background:none; border:none; color:#3498db; cursor:pointer; font-weight:bold; padding:0; margin-left: 5px;"> Leer menos</button>`;
 }
 
@@ -107,7 +100,6 @@ function filtrarPorCategoria(categoria) {
     const tarjetas = document.getElementsByClassName('card');
     
     for (let i = 0; i < tarjetas.length; i++) {
-        // Obtenemos la categoría del atributo data-categoria que crearemos abajo
         const cat = tarjetas[i].getAttribute('data-categoria');
         
         if (categoria === 'Todos' || cat === categoria) {
