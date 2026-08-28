@@ -96,11 +96,39 @@ Al abrir la ventana, la simulación arranca automáticamente con 5 procesos de e
 
 ### Versión de consola
 
-*(Agregar capturas mostrando procesos en ejecución, cola de espera y estado de memoria en consola)*
+**Menú interactivo:**
+
+![Menú interactivo](docs/Menu_Interactivo.png)
+
+**Simulación en curso (procesos en ejecución y en cola):**
+
+![Simulación iniciando](docs/Simulacion1.png)
+
+**Simulación finalizando (memoria liberándose):**
+
+![Simulación finalizando](docs/Simulacion2.png)
+
+**Lista de procesos cargados:**
+
+![Lista de procesos](docs/Ver_lista_de_procesos_cargados.png)
 
 ### Versión gráfica
 
-*(Agregar capturas de la ventana con procesos en ejecución/cola simultáneamente, y del formulario agregando un proceso)*
+**Procesos en ejecución y en cola de espera simultáneamente:**
+
+![Ejecución y cola](docs/gui-ejecucion-cola.png)
+
+**Estado de memoria RAM en nivel alto:**
+
+![Memoria alta](docs/gui-memoria-alta.png)
+
+**Formulario para agregar un proceso nuevo:**
+
+![Formulario](docs/gui-formulario.png)
+
+**Estado final con todos los procesos finalizados y memoria liberada:**
+
+![Simulación finalizada](docs/gui-finalizado.png)
 
 ## Autores
 
