@@ -133,5 +133,5 @@ Al abrir la ventana, la simulación arranca automáticamente con 5 procesos de e
 ## Autores
 
 - Ricardo — Desarrollo del simulador (lógica de procesos, memoria, concurrencia e interfaz gráfica)
-- [Nombre compañero 1] — Documentación
-- [Nombre compañero 2] — Capturas de pantalla y revisión
+- Galilea — Documentación
+- Brian — Capturas de pantalla y revisión
