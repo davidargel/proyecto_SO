@@ -13,30 +13,44 @@ El sistema:
 - Al liberarse memoria, revisa la cola de espera e ingresa a ejecución a los procesos pendientes que ya puedan asignarse.
 - Muestra en tiempo real el **estado del sistema**: memoria usada, memoria disponible, procesos en ejecución y procesos en cola.
 
-El proyecto incluye **dos formas de uso**: una versión de consola y una interfaz gráfica de escritorio.
+El proyecto incluye **tres formas de uso**: una versión de consola, una interfaz gráfica de escritorio y una **versión web** integrada a la wiki del curso mediante una API con FastAPI.
 
 ## Tecnologías implementadas
 
 - **Lenguaje:** Python 3
-- **Librerías utilizadas** (todas parte de la librería estándar de Python, sin dependencias externas):
+- **Librerías de las versiones de consola y gráfica** (todas parte de la librería estándar de Python, sin dependencias externas):
   - `threading` — para simular la ejecución concurrente de procesos (cada proceso corre en su propio hilo)
   - `queue` — para implementar la cola de espera (FIFO) de procesos sin memoria disponible, y el registro de eventos de la interfaz gráfica
   - `time` — para simular la duración de ejecución de cada proceso
   - `random` — para generar nombres automáticos cuando no se especifica uno
   - `tkinter` — para la interfaz gráfica de escritorio (barra de memoria, tablas de procesos, formulario)
+- **Versión web (API + wiki):**
+  - `FastAPI` — framework que expone el simulador como una API REST (`POST /procesos`, `GET /estado`)
+  - `uvicorn` — servidor que ejecuta la API
+  - `HTML`, `CSS` y `JavaScript` (`fetch`) — página `simulador.html` de la wiki, que consulta la API cada segundo
 
 ## Estructura del proyecto
-simulador-procesos/
-├── main.py # Punto de entrada de la versión de consola
-├── main_gui.py # Punto de entrada de la versión gráfica (tkinter)
-├── src/
-│ ├── proceso.py # Clase Proceso (PID, nombre, memoria, duración, estado)
-│ ├── gestor_memoria.py # Clase GestorMemoria (control de RAM disponible/usada)
-│ ├── simulador.py # Clase Simulador (cola, ejecución concurrente, eventos)
-│ └── interfaz_grafica.py # Clase SimuladorGUI (ventana de tkinter)
-├── docs/ # Capturas de pantalla del programa en funcionamiento
-├── .gitignore
-└── README.md
+
+```
+proyecto_SO/
+├── docs/                          # Wiki (HTML/CSS/JS + Supabase)
+│   ├── index.html
+│   ├── simulador.html             # Página del simulador dentro de la wiki
+│   └── simulador.js               # Lógica de la página (consume la API)
+└── simulador-procesos/
+    ├── main.py                    # Punto de entrada de la versión de consola
+    ├── main_gui.py                # Punto de entrada de la versión gráfica (tkinter)
+    ├── api.py                     # API FastAPI que expone el simulador a la wiki
+    ├── requirements.txt           # Dependencias de la API (fastapi, uvicorn)
+    ├── src/
+    │   ├── proceso.py             # Clase Proceso (PID, nombre, memoria, duración, estado)
+    │   ├── gestor_memoria.py      # Clase GestorMemoria (control de RAM disponible/usada)
+    │   ├── simulador.py           # Clase Simulador (cola, ejecución concurrente, eventos)
+    │   └── interfaz_grafica.py    # Clase SimuladorGUI (ventana de tkinter)
+    ├── docs/                      # Capturas de pantalla del programa en funcionamiento
+    ├── .gitignore
+    └── README.md
+```
 
 ## Instalación y uso
 
@@ -92,6 +106,47 @@ Al abrir la ventana, la simulación arranca automáticamente con 5 procesos de e
 - **Registro de eventos** mostrando cuándo cada proceso inicia y finaliza.
 - **Formulario** en la parte inferior para agregar nuevos procesos mientras la simulación está corriendo (nombre opcional, memoria en MB y duración en segundos).
 
+### Cómo usar la versión web (API + wiki)
+
+La versión web reutiliza las mismas clases del simulador (`Proceso`, `GestorMemoria`, `Simulador`): `api.py` las envuelve en una API REST y la página `docs/simulador.html` de la wiki funciona como pantalla.
+
+```
+Wiki (HTML/JS)  ──fetch──▶  API FastAPI (api.py)  ──▶  Simulador (src/)
+```
+
+**1. Instalar las dependencias** (con el entorno virtual activo, dentro de `simulador-procesos/`):
+```bash
+pip install -r requirements.txt
+```
+
+**2. Encender la API** (dejar esta terminal abierta):
+```bash
+uvicorn api:app --reload
+```
+La documentación interactiva de la API queda en `http://127.0.0.1:8000/docs`.
+
+**3. Servir la wiki** (en una segunda terminal):
+```bash
+cd ../docs
+python3 -m http.server 8080
+```
+
+**4. Abrir la página** en el navegador: `http://localhost:8080/simulador.html`. También se llega desde el botón "Simulador de procesos" de la barra lateral de la wiki.
+
+La página muestra el estado de la RAM, las tablas de procesos en ejecución y en cola, el registro de eventos y un formulario para agregar procesos. El botón **"Cargar 5 procesos de ejemplo"** envía los mismos procesos de prueba de las otras versiones.
+
+**Endpoints de la API:**
+
+| Método | Ruta | Descripción |
+|---|---|---|
+| `POST` | `/procesos` | Crea un proceso (`nombre` opcional, `memoria` en MB, `duracion` en segundos) y lo envía a la cola. Rechaza procesos que superen la RAM total. |
+| `GET` | `/estado` | Devuelve la memoria total/usada/disponible, los procesos en ejecución, la cola de espera y los últimos eventos. |
+
+**Notas:**
+- La API mantiene **un único simulador compartido**: todos los usuarios que la consulten ven el mismo estado.
+- La dirección de la API se define en la constante `API_URL` al inicio de `docs/simulador.js` (por defecto `http://127.0.0.1:8000`). Si la API se despliega en un servidor, se debe cambiar por su URL pública.
+- GitHub Pages solo sirve archivos estáticos, por lo que la API (Python) debe ejecutarse por separado.
+
 ## Capturas de pantalla
 
 ### Versión de consola
@@ -129,6 +184,23 @@ Al abrir la ventana, la simulación arranca automáticamente con 5 procesos de e
 **Estado final con todos los procesos finalizados y memoria liberada:**
 
 ![Simulación finalizada](docs/gui-finalizado.png)
+
+### Versión web (wiki + API)
+**Procesos en ejecución y en cola de espera simultáneamente:**
+
+![Ejecución y cola](docs/web-ejecucion-cola.png)
+
+**Estado de la memoria RAM:**
+
+![Memoria alta](docs/web-memoria-alta.png)
+
+**Formulario para agregar un proceso:**
+
+![Formulario](docs/web-formulario.png)
+
+**Estado final con la memoria liberada:**
+
+![Finalizado](docs/web-finalizado.png)
 
 ## Autores
 
