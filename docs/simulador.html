@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Simulador de Procesos | Wiki de Sistemas Operativos</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        body { padding: 0 0 40px; }
+        .hero { background: linear-gradient(135deg, #2c3e50, #3498db); color: #fff; text-align: center; padding: 38px 20px 70px; }
+        .hero h1 { color: #fff; margin: 0 0 6px; font-size: 2rem; }
+        .hero p { margin: 0; opacity: .85; }
+        .volver { display: inline-block; margin-bottom: 14px; color: #fff; text-decoration: none; background: rgba(255,255,255,.18); padding: 6px 16px; border-radius: 20px; font-size: .9rem; transition: background .2s; }
+        .volver:hover { background: rgba(255,255,255,.32); }
+
+        .sim { max-width: 1100px; margin: -44px auto 0; padding: 0 20px; display: grid; gap: 22px; }
+        .panel { background: #fff; border-radius: 15px; box-shadow: 0 4px 15px rgba(0,0,0,.1); padding: 20px 22px; }
+        .panel h2 { margin: 0 0 14px; font-size: 1.05rem; color: #2c3e50; display: flex; align-items: center; gap: 8px; }
+        .badge { background: #eaf3fb; color: #3498db; border-radius: 12px; padding: 1px 10px; font-size: .8rem; }
+
+        #estadoApi { display: inline-flex; align-items: center; gap: 8px; background: #fff; border-radius: 20px; padding: 6px 16px; font-size: .88rem; font-weight: 600; box-shadow: 0 2px 8px rgba(0,0,0,.12); justify-self: start; }
+        #estadoApi::before { content: ""; width: 10px; height: 10px; border-radius: 50%; background: #aaa; }
+        #estadoApi.ok { color: #2e7d32; } #estadoApi.ok::before { background: #4CAF50; box-shadow: 0 0 0 4px rgba(76,175,80,.25); }
+        #estadoApi.mal { color: #c62828; } #estadoApi.mal::before { background: #F44336; }
+
+        .stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; }
+        .stat { background: #fff; border-radius: 15px; box-shadow: 0 4px 15px rgba(0,0,0,.1); padding: 16px 18px; border-top: 4px solid #3498db; }
+        .stat b { display: block; font-size: 1.7rem; color: #2c3e50; }
+        .stat span { font-size: .82rem; color: #7f8c8d; text-transform: uppercase; letter-spacing: .5px; }
+        .stat.verde { border-color: #4CAF50; } .stat.naranja { border-color: #FFC107; } .stat.morado { border-color: #9b59b6; }
+
+        .barra { height: 34px; background: #ecf0f1; border-radius: 17px; overflow: hidden; position: relative; }
+        .barra div { height: 100%; width: 0; border-radius: 17px; transition: width .5s ease, background .5s; background: linear-gradient(90deg, #66bb6a, #4CAF50); }
+        .barra span { position: absolute; inset: 0; text-align: center; line-height: 34px; font-weight: 700; color: #2c3e50; text-shadow: 0 0 4px #fff; }
+        .leyenda { display: flex; justify-content: space-between; font-size: .75rem; color: #95a5a6; margin-top: 6px; }
+
+        .tablas { display: grid; grid-template-columns: 1fr 1fr; gap: 22px; }
+        table { width: 100%; border-collapse: collapse; }
+        th { text-align: left; font-size: .78rem; text-transform: uppercase; color: #95a5a6; padding: 6px 8px; border-bottom: 2px solid #ecf0f1; }
+        td { padding: 9px 8px; border-bottom: 1px solid #f1f3f4; font-size: .92rem; color: #2c3e50; }
+        tbody tr:hover { background: #f8fbfe; }
+        .pid { background: #eaf3fb; color: #3498db; border-radius: 6px; padding: 2px 8px; font-weight: 700; font-family: monospace; }
+        .vacio { text-align: center; color: #b2bec3; padding: 22px 0; font-style: italic; }
+        .run .pid { animation: pulso 1.4s infinite; }
+        @keyframes pulso { 50% { background: #c9e4f7; } }
+
+        #log { background: #1e272e; border-radius: 10px; padding: 12px 14px; height: 170px; overflow-y: auto; font-family: Consolas, monospace; font-size: .82rem; line-height: 1.6; color: #b2bec3; }
+        #log .ini { color: #74b9ff; } #log .fin { color: #55efc4; } #log .add { color: #b2bec3; }
+
+        .form { display: grid; grid-template-columns: 2fr 1fr 1fr auto; gap: 12px; align-items: start; }
+        .form input { margin: 0; }
+        .form button { width: auto; padding: 12px 26px; }
+        .form button.sec { background: #ecf0f1; color: #2c3e50; }
+        .form button.sec:hover { background: #dfe6e9; }
+        .acciones { display: flex; gap: 10px; }
+
+        @media (max-width: 800px) {
+            .stats { grid-template-columns: 1fr 1fr; } .tablas { grid-template-columns: 1fr; }
+            .form { grid-template-columns: 1fr; } .form button { width: 100%; }
+        }
+    </style>
+</head>
+<body>
+    <header class="hero">
+        <a class="volver" href="index.html">← Volver a la wiki</a>
+        <h1>Simulador de Gestión de Procesos</h1>
+        <p>Memoria RAM limitada · cola de espera · ejecución concurrente</p>
+    </header>
+
+    <div class="sim">
+        <div id="estadoApi">Conectando con la API…</div>
+
+        <div class="stats">
+            <div class="stat"><b id="sTotal">—</b><span>RAM total (MB)</span></div>
+            <div class="stat naranja"><b id="sUsada">—</b><span>En uso (MB)</span></div>
+            <div class="stat verde"><b id="sLibre">—</b><span>Disponible (MB)</span></div>
+            <div class="stat morado"><b id="sProc">—</b><span>Ejecutando / en cola</span></div>
+        </div>
+
+        <div class="panel">
+            <h2>Memoria RAM</h2>
+            <div class="barra"><div id="barraUso"></div><span id="barraTexto">—</span></div>
+            <div class="leyenda"><span>0%</span><span>25%</span><span>50%</span><span>75%</span><span>100%</span></div>
+        </div>
+
+        <div class="tablas">
+            <div class="panel"><h2>⚙️ En ejecución <span class="badge" id="nEjec">0</span></h2>
+                <table><thead><tr><th>PID</th><th>Nombre</th><th>MB</th><th>Seg</th></tr></thead><tbody id="tEjec"></tbody></table></div>
+            <div class="panel"><h2>⏳ En cola de espera <span class="badge" id="nCola">0</span></h2>
+                <table><thead><tr><th>PID</th><th>Nombre</th><th>MB</th><th>Seg</th></tr></thead><tbody id="tCola"></tbody></table></div>
+        </div>
+
+        <div class="panel"><h2>📋 Registro de eventos</h2><div id="log"></div></div>
+
+        <div class="panel">
+            <h2>➕ Agregar proceso</h2>
+            <div class="form">
+                <input id="nombre" placeholder="Nombre (opcional)">
+                <input id="memoria" type="number" min="1" placeholder="Memoria (MB)">
+                <input id="duracion" type="number" min="1" placeholder="Duración (s)">
+                <button onclick="agregar()">Agregar</button>
+            </div>
+            <div class="acciones" style="margin-top:12px"><button class="sec" style="width:auto" onclick="cargarEjemplos()">Cargar 5 procesos de ejemplo</button></div>
+        </div>
+    </div>
+    <script src="simulador.js"></script>
+</body>
+</html>
