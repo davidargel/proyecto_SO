@@ -1,0 +1,22 @@
+# Despliegue en Render (plan gratuito) de las dos partes que necesitan servidor Python.
+# La wiki (docs/) sigue publicada en GitHub Pages; sus botones apuntan a estas direcciones.
+services:
+  # Proyecto 2: motor de transacciones concurrentes (Flask + Flask-SocketIO)
+  - type: web
+    name: bibliosync-so
+    runtime: python
+    plan: free
+    rootDir: motor-transacciones
+    buildCommand: pip install -r requirements.txt
+    startCommand: python app.py
+    healthCheckPath: /api/estado
+
+  # Simulador de procesos: API FastAPI que consume docs/simulador.html
+  - type: web
+    name: simulador-procesos-api
+    runtime: python
+    plan: free
+    rootDir: simulador-procesos
+    buildCommand: pip install -r requirements.txt
+    startCommand: uvicorn api:app --host 0.0.0.0 --port $PORT
+    healthCheckPath: /estado
