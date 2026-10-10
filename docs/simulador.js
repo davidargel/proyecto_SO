@@ -1,5 +1,5 @@
 // Dirección de la API FastAPI. En local: uvicorn api:app. En producción: la URL https del backend desplegado.
-const API_URL = "http://127.0.0.1:8000";
+const API_URL = "https://simulador-procesos-api.onrender.com";
 
 // Escapa texto antes de meterlo al HTML (los nombres de proceso los escribe el usuario)
 const esc = (t) => String(t).replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
